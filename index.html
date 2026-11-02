@@ -447,8 +447,8 @@ const save=()=>{store.set('salat.settings',S);store.set('salat.log',LOG)};
 
 function windowOf(key,p){const t=computeDay(key);const end={fajr:t.sunrise,dhuhr:t.asr,asr:t.maghrib,maghrib:t.isha,isha:computeDay(addDays(key,1)).fajr}[p];return{start:t[p],end}}
 const PLANNING=[
-{from:'2026-11-02',to:'2026-11-06',days:[1,2,3,4,5],dep:'11:00',ret:'22:45',label:'Semaine du 2 nov, boulot 12:00 à 22:00'},
-{from:'2026-11-09',to:'2026-11-13',days:[1,2,3,4,5],dep:'05:00',ret:'16:30',label:'Semaine du 9 nov, boulot 06:00 à 15:45'}
+{from:'2026-11-02',to:'2026-11-06',days:[1,2,3,4,5],dep:'12:00',ret:'22:00',label:'Semaine du 2 nov'},
+{from:'2026-11-09',to:'2026-11-13',days:[1,2,3,4,5],dep:'06:00',ret:'15:45',label:'Semaine du 9 nov'}
 ];
 function planOf(key){return PLANNING.find(p=>key>=p.from&&key<=p.to&&p.days.includes(wday(key)))||null}
 function work(key){const o=planOf(key);if(o)return{dep:localInstant(key,o.dep),ret:localInstant(key,o.ret)};const s=S.schedule[wday(key)];if(!s||!s.on)return null;return{dep:localInstant(key,s.dep),ret:localInstant(key,s.ret)}}

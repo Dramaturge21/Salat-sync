@@ -446,7 +446,9 @@ if(!S.start){S.start=keyOf(Date.now());store.set('salat.settings',S)}
 const save=()=>{store.set('salat.settings',S);store.set('salat.log',LOG)};
 
 function windowOf(key,p){const t=computeDay(key);const end={fajr:t.sunrise,dhuhr:t.asr,asr:t.maghrib,maghrib:t.isha,isha:computeDay(addDays(key,1)).fajr}[p];return{start:t[p],end}}
-function work(key){const s=S.schedule[wday(key)];if(!s||!s.on)return null;return{dep:localInstant(key,s.dep),ret:localInstant(key,s.ret)}}
+const PLANNING=[{from:'2026-11-02',to:'2026-11-06',days:[1,2,3,4,5],dep:'12:00',ret:'21:45',label:'Stage 2 au 6 nov, lun-ven'}];
+function planOf(key){return PLANNING.find(p=>key>=p.from&&key<=p.to&&p.days.includes(wday(key)))||null}
+function work(key){const o=planOf(key);if(o)return{dep:localInstant(key,o.dep),ret:localInstant(key,o.ret)};const s=S.schedule[wday(key)];if(!s||!s.on)return null;return{dep:localInstant(key,s.dep),ret:localInstant(key,s.ret)}}
 function lockAt(key,p){const {start}=windowOf(key,p);let l=start+S.grace*6e4;const w=work(key);if(w&&start<w.ret&&l>=w.dep&&l<w.ret)l=w.ret;if(w&&start>=w.dep&&start<w.ret)l=Math.max(l,w.ret);return l}
 function status(key,p,now=Date.now()){
   const e=LOG[key]&&LOG[key][p];if(e)return e.s;
@@ -852,6 +854,7 @@ function renderSettings(anim){
     <div class="row"><div><label>Verrou actuel</label><small>${nl<=Date.now()?'Bloqué maintenant':isFinite(nl)?'Prochain : '+hm(nl):'—'} · code <b>${isFinite(nl)?code(nl):'—'}</b></small></div><button class="btn sm" id="force">Synchroniser</button></div>
   </div>
   <div class="sect">Emploi du temps (trajet compris)</div>
+  ${PLANNING.filter(p=>keyOf(Date.now())<=p.to).map(p=>`<div class="card"><div class="row"><div><label>Planning en cours</label><small>${p.label} : départ ${p.dep}, retour ${p.ret}. Prioritaire sur les horaires ci-dessous.</small></div></div></div>`).join('')}
   <div class="card">${S.schedule.map((s,i)=>({s,i})).sort((a,b)=>((a.i+6)%7)-((b.i+6)%7)).map(({s,i})=>`
     <div class="day"><div class="h"><b>${DAYS[i]}</b><button class="sw ${s.on?'on':''}" data-day="${i}" aria-label="${DAYS[i]}"></button></div>
     <div class="tms ${s.on?'':'off'}">Départ <input type="time" data-dep="${i}" value="${s.dep}"> Retour <input type="time" data-ret="${i}" value="${s.ret}"></div></div>`).join('')}

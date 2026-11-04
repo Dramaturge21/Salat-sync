@@ -673,9 +673,9 @@ html[data-v="site"] .hero .cta-row { justify-content: flex-start; margin-top: 30
 .pillar p { font-size: 18px; line-height: 1.55; color: var(--muted); }
 
 /* bandeau photo */
-.qband { position: relative; height: 56vh; min-height: 340px; max-height: 620px; background: var(--hero-img) 58% 45% / cover no-repeat; display: grid; place-items: center; }
-.qband::before { content: ''; position: absolute; inset: 0; background: radial-gradient(70% 70% at 50% 50%, rgba(24, 14, 8, .55), rgba(24, 14, 8, .25)); }
-.qband .quote { position: relative; z-index: 1; text-align: center; padding: 0 8vw; font-family: var(--serif); font-size: clamp(34px, 3.6vw + 14px, 66px); font-style: italic; line-height: 1.1; color: #FBF6EE; text-shadow: 0 2px 30px rgba(0, 0, 0, .6); }
+.qband { position: relative; height: auto; min-height: 0; padding: clamp(72px, 10vw, 128px) 0; background: radial-gradient(80% 140% at 50% 0%, #5A3A26 0%, #3E2618 70%); display: grid; place-items: center; }
+.qband::before { content: ''; position: absolute; left: 50%; top: clamp(28px, 4vw, 48px); width: 56px; height: 2px; margin-left: -28px; background: #C9962B; }
+.qband .quote { position: relative; z-index: 1; text-align: center; padding: 0 8vw; font-family: var(--serif); font-size: clamp(34px, 3.6vw + 14px, 66px); font-style: italic; line-height: 1.1; color: #FBF6EE; text-shadow: none; }
 
 /* sections claires */
 html[data-v="site"] .band { background: var(--sand); }
@@ -726,7 +726,7 @@ html[data-v="site"] .notice { color: #3E2D0A; }
 @media (max-width: 420px) { .brand-bull { width: 42px; } .brand-txt .b1 { font-size: 16px; } .brand-txt .b2 { font-size: 10px; letter-spacing: .22em; } }
 @media (max-width: 350px) { .brand-txt { display: none; } .site-header .wrap { padding: 0 14px; gap: 8px; } }
 @media (prefers-reduced-motion: reduce) { .hero-photo .bg { transform: none; } }
-@media (max-width: 900px) { .hero-photo { order: -1; aspect-ratio: 16 / 10; } .hero-logo { display: none; } }
+@media (max-width: 900px) { .hero-photo { order: 0; aspect-ratio: 16 / 10; } .hero-logo { display: none; } }
 .legal ul { margin: 8px 0 0; padding-left: 22px; } .legal li { margin: 6px 0; color: inherit; }
 .cal-head .icon-btn[hidden] { display: inline-flex !important; visibility: hidden; }
 /* espace restaurateur : compléments */
@@ -1373,6 +1373,7 @@ var STR = {
   f_note: ['Une précision ?', 'Anything we should know?', 'Nog iets dat we moeten weten?', 'Möchten Sie uns etwas mitteilen?'],
   f_note_ph: ['Anniversaire, allergie, chaise bébé…', 'Birthday, allergy, high chair…', 'Verjaardag, allergie, kinderstoel…', 'Geburtstag, Allergie, Kinderstuhl…'],
   consent: ['Je confirme une table pour {p} et j’accepte les {link}.', 'I confirm a table for {p} and accept the {link}.', 'Ik bevestig een tafel voor {p} en aanvaard de {link}.', 'Ich bestätige einen Tisch für {p} und akzeptiere die {link}.'],
+  consent0: ['Je confirme ma réservation et j’accepte les {link}.', 'I confirm my booking and accept the {link}.', 'Ik bevestig mijn reservatie en aanvaard de {link}.', 'Ich bestätige meine Reservierung und akzeptiere die {link}.'],
   consent_link: ['conditions de réservation', 'booking conditions', 'reservatievoorwaarden', 'Reservierungsbedingungen'],
   privacy_line: ['Vos données servent uniquement à gérer votre réservation.', 'Your details are only used to manage your booking.', 'Uw gegevens dienen enkel om uw reservatie te beheren.', 'Ihre Daten dienen nur der Verwaltung Ihrer Reservierung.'],
   submit: ['Confirmer la réservation', 'Confirm booking', 'Reservatie bevestigen', 'Reservierung bestätigen'],
@@ -2103,7 +2104,7 @@ function updateBooking() {
   $('#partyNotes').innerHTML = notes;
   renderCal(); renderSlots();
   var ct = $('#consentText');
-  ct.innerHTML = B.party ? t('consent', { p: tableFor(B.party), link: '<a class="link" href="#conditions">' + t('consent_link') + '</a>' }) : t('consent', { p: '…', link: '<a class="link" href="#conditions">' + t('consent_link') + '</a>' });
+  ct.innerHTML = B.party ? t('consent', { p: tableFor(B.party), link: '<a class="link" href="#conditions">' + t('consent_link') + '</a>' }) : t('consent0', { link: '<a class="link" href="#conditions">' + t('consent_link') + '</a>' });
   $('#submitBtn').textContent = (B.party && B.party >= S().groupThreshold) ? t('submit_group') : t('submit');
   var lockDate = !maxOk, lockTime = !maxOk || !B.date, lockDet = !maxOk || !B.time;
   [['#fsDate', lockDate], ['#fsTime', lockTime]].forEach(function (p) {
